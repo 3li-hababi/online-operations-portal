@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Estimate</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Estimated Shipping Cost to Salalah</h1>
+
+<hr>
+
+<h2>{{ row.STATE }}</h2>
+
+<h3>{{ row.BRANCH }}</h3>
+
+<p>{{ row.CITY }}</p>
+
+<p>
+
+Warehouse:
+
+<strong>{{ row.WAREHOUSE }}</strong>
+
+</p>
+
+<hr>
+
+<p><strong>Towing Rate</strong></p>
+
+<p>${{ row["TOWING RATE"] }}</p>
+
+<p><strong>Shipping Rate 40 HC</strong></p>
+
+<p>${{ row["SHIPPING RATE 40 HC"] }}</p>
+
+<p><strong>Shipping Rate 45 HC</strong></p>
+
+<p>${{ row["SHIPPING RATE 45 HC"] }}</p>
+
+</div>
+
+</body>
+
+</html>

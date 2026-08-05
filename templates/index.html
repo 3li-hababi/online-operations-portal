@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ONLINE OPERATIONS PORTAL</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>ONLINE OPERATIONS PORTAL</h1>
+    <h2>USA to Salalah Shipping Cost Estimator</h2>
+
+    <form id="search-form" method="POST" action="">
+        <label>Branch or City Name</label>
+        <input
+            id="search"
+            type="text"
+            name="search"
+            value="{{ request.form.get('search','') }}"
+            placeholder="Search by branch or city..."
+            autocomplete="off">
+        <div id="suggestions" class="suggestions"></div>
+
+        <label>Vehicle Price (Optional)</label>
+        <input
+            type="number"
+            name="vehicle_price"
+            value="{{ request.form.get('vehicle_price','') }}"
+            placeholder="Example: 4300">
+
+        <button type="submit">
+            Calculate Estimate
+        </button>
+    </form>
+
+    {% if results %}
+
+    <h2>{{ results|length }} Matching Location{% if results|length != 1 %}s{% endif %}</h2>
+
+    <div class="cards">
+
+    {% for row in results %}
+
+    <div class="card">
+
+        <div class="card-header">
+            📍 {{ row.BRANCH }}
+        </div>
+
+        <div class="card-city">
+            {{ row.CITY }}
+        </div>
+
+        <div class="card-footer">
+            Warehouse:
+            <strong>{{ row.WAREHOUSE }}</strong>
+        </div>
+
+        <hr>
+
+        <table class="quote-table">
+
+            <tr>
+                <td>🚚 Inland Towing</td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["TOWING RATE"]|float) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>🚢 Ocean Freight (40 HC)</td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["OCEAN40"]) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>🚢 Ocean Freight (45 HC)</td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["OCEAN45"]) }}
+                </td>
+            </tr>
+
+            <tr class="shipping-row">
+                <td><strong>Total Shipping (40 HC)</strong></td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["SHIPPING40"]) }}
+                </td>
+            </tr>
+
+            <tr class="shipping-row">
+                <td><strong>Total Shipping (45 HC)</strong></td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["SHIPPING45"]) }}
+                </td>
+            </tr>
+
+            {% if row["VEHICLE_PRICE"] %}
+
+            <tr>
+                <td>🚗 Vehicle Price</td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["VEHICLE_PRICE"]) }}
+                </td>
+            </tr>
+
+            <tr class="total-row">
+                <td>Estimated Total (40 HC)</td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["TOTAL40"]) }}
+                </td>
+            </tr>
+
+            <tr class="total-row">
+                <td>Estimated Total (45 HC)</td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["TOTAL45"]) }}
+                </td>
+            </tr>
+
+            {% endif %}
+
+        </table>
+
+        <div class="advisory">
+
+            <strong>⚠ Important Notice</strong>
+
+            <p>
+                All rates shown are estimates and are subject to change without prior notice.
+                Final pricing may vary due to changes in ocean freight, inland transportation,
+                fuel surcharges, port charges, customs requirements, shipping line adjustments,
+                seasonal demand, or other operational factors.
+            </p>
+
+            <p>
+                For the latest confirmed quotation, please contact us on Telegram:
+                <strong>+967771228212</strong>
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+<script>
+    const search = document.getElementById("search");
+    const suggestions = document.getElementById("suggestions");
+
+    search.addEventListener("input", async function(){
+        const q = search.value.trim();
+
+        if(q.length < 2){
+            suggestions.style.display = "none";
+            suggestions.innerHTML = "";
+            return;
+        }
+
+        const response = await fetch("/api/search?q=" + encodeURIComponent(q));
+        const data = await response.json();
+
+        suggestions.innerHTML = "";
+
+        if(data.length === 0){
+            suggestions.style.display = "none";
+            return;
+        }
+
+        suggestions.style.display = "block";
+
+        data.forEach(function(item){
+            const div = document.createElement("div");
+            div.className = "suggestion";
+
+            div.innerHTML = `
+                <strong>${item.BRANCH}</strong><br>
+                ${item.CITY} • ${item.STATE} • ${item.WAREHOUSE}
+            `;
+
+            div.onclick = function(){
+                search.value = item.BRANCH;
+                suggestions.style.display = "none";
+
+                const vehicle = document.querySelector('input[name="vehicle_price"]');
+
+                if(vehicle.value.trim() === ""){
+                    document.getElementById("search-form").submit();
+                }
+            };
+
+            suggestions.appendChild(div);
+        });
+    });
+
+    document.addEventListener("click", function(e){
+        if(!suggestions.contains(e.target) && e.target !== search){
+            suggestions.style.display = "none";
+        }
+    });
+</script>
+
+</body>
+
+</html>
