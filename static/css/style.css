@@ -24,6 +24,13 @@ body{
 
 }
 
+.logo {
+    display: block;
+    width: 140px;
+    height: auto;
+    margin: 0 auto 20px;
+}
+
 h1{
 
     text-align:center;
