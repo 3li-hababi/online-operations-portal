@@ -133,6 +133,31 @@
 
         </table>
 
+        <button type="button" class="copy-rates-btn">
+            📋 Copy Rates</button><textarea class="copy-data" hidden>
+📍 {{ row.BRANCH }}
+{{ row.CITY }}
+Warehouse: {{ row.WAREHOUSE }}
+
+🚚 Inland Towing: ${{ "{:,.2f}".format(row["TOWING RATE"]|float) }}
+🚢 Ocean Freight (40 HC): ${{ "{:,.2f}".format(row["OCEAN40"]) }}
+🚢 Ocean Freight (45 HC): ${{ "{:,.2f}".format(row["OCEAN45"]) }}
+
+Total Shipping (40 HC): ${{ "{:,.2f}".format(row["SHIPPING40"]) }}
+Total Shipping (45 HC): ${{ "{:,.2f}".format(row["SHIPPING45"]) }}
+{% if row["VEHICLE_PRICE"] %}
+🚗 Vehicle Price: ${{ "{:,.2f}".format(row["VEHICLE_PRICE"]) }}
+Estimated Total (40 HC): ${{ "{:,.2f}".format(row["TOTAL40"]) }}
+Estimated Total (45 HC): ${{ "{:,.2f}".format(row["TOTAL45"]) }}
+{% endif %}
+
+⚠️ ملاحظة مهمة
+
+جميع الأسعار الموضحة هي أسعار تقديرية وقابلة للتغيير دون إشعار مسبق. وقد تختلف الأسعار النهائية نتيجة للتغيرات في أجور الشحن البحري، النقل البري، رسوم الوقود، رسوم الموانئ، المتطلبات الجمركية، تعديلات شركات الشحن، المواسم، أو أي عوامل تشغيلية أخرى.
+
+للحصول على أحدث عرض سعر مؤكد، يرجى التواصل معنا عبر تيليجرام:
++967771228212</textarea>
+
         <div class="advisory">
 
             <strong>⚠ Important Notice</strong>
@@ -214,6 +239,30 @@
         if(!suggestions.contains(e.target) && e.target !== search){
             suggestions.style.display = "none";
         }
+    });
+
+    document.querySelectorAll(".copy-rates-btn").forEach(function(button) {
+
+        button.addEventListener("click", async function() {
+
+            const card = button.closest(".card");
+            const copyData = card.querySelector(".copy-data");
+
+            try {
+                await navigator.clipboard.writeText(copyData.value.trim());
+
+                const originalText = button.innerHTML;
+                button.innerHTML = "✅ Copied!";
+
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                }, 1500);
+
+            } catch (error) {
+                alert("Could not copy the rates.");
+            }
+        });
+
     });
 </script>
 

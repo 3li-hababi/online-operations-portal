@@ -340,3 +340,20 @@ tr:hover {
         font-size: 15px;
     }
 }
+
+.copy-rates-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 11px;
+    background: #f5f8fc;
+    color: #003366;
+    border: 1px solid #003366;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-rates-btn:hover {
+    background: #eef6ff;
+}
