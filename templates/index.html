@@ -39,6 +39,13 @@
             value="{{ request.form.get('vehicle_price','') }}"
             placeholder="Example: 4300">
 
+        <label>Salalah–Shihen Fees (Optional)</label>
+        <input
+            type="number"
+            name="salalah_shihen_fee"
+            value="{{ request.form.get('salalah_shihen_fee','') }}"
+            placeholder="Example: 350">
+
         <button type="submit">
             Calculate Estimate
         </button>
@@ -107,13 +114,24 @@
             </tr>
 
             {% if row["VEHICLE_PRICE"] %}
-
             <tr>
                 <td>🚗 Vehicle Price</td>
                 <td class="price">
                     ${{ "{:,.2f}".format(row["VEHICLE_PRICE"]) }}
                 </td>
             </tr>
+            {% endif %}
+
+            {% if row["SALALAH_SHIHEN_FEE"] %}
+            <tr>
+                <td>🏗️ Salalah–Shihen Fees</td>
+                <td class="price">
+                    ${{ "{:,.2f}".format(row["SALALAH_SHIHEN_FEE"]) }}
+                </td>
+            </tr>
+            {% endif %}
+
+            {% if row["VEHICLE_PRICE"] or row["SALALAH_SHIHEN_FEE"] %}
 
             <tr class="total-row">
                 <td>Estimated Total (40 HC)</td>
@@ -145,8 +163,14 @@ Warehouse: {{ row.WAREHOUSE }}
 
 Total Shipping (40 HC): ${{ "{:,.2f}".format(row["SHIPPING40"]) }}
 Total Shipping (45 HC): ${{ "{:,.2f}".format(row["SHIPPING45"]) }}
+
 {% if row["VEHICLE_PRICE"] %}
 🚗 Vehicle Price: ${{ "{:,.2f}".format(row["VEHICLE_PRICE"]) }}
+{% endif %}
+{% if row["SALALAH_SHIHEN_FEE"] %}
+🏗️ Salalah–Shihen Fees: ${{ "{:,.2f}".format(row["SALALAH_SHIHEN_FEE"]) }}
+{% endif %}
+{% if row["VEHICLE_PRICE"] or row["SALALAH_SHIHEN_FEE"] %}
 Estimated Total (40 HC): ${{ "{:,.2f}".format(row["TOTAL40"]) }}
 Estimated Total (45 HC): ${{ "{:,.2f}".format(row["TOTAL45"]) }}
 {% endif %}
@@ -225,8 +249,9 @@ Estimated Total (45 HC): ${{ "{:,.2f}".format(row["TOTAL45"]) }}
                 suggestions.style.display = "none";
 
                 const vehicle = document.querySelector('input[name="vehicle_price"]');
+                const shihen = document.querySelector('input[name="salalah_shihen_fee"]');
 
-                if(vehicle.value.trim() === ""){
+                if(vehicle.value.trim() === "" && shihen.value.trim() === ""){
                     document.getElementById("search-form").submit();
                 }
             };

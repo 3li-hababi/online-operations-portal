@@ -17,6 +17,7 @@ def home():
 
     results = []
     vehicle_price = None
+    salalah_shihen_fee = None
 
     if request.method == "POST":
 
@@ -46,6 +47,13 @@ def home():
         except:
             vehicle_price = None
 
+        salalah_shihen_fee = request.form.get("salalah_shihen_fee", "").strip()
+
+        try:
+            salalah_shihen_fee = float(salalah_shihen_fee)
+        except:
+            salalah_shihen_fee = None
+
         results = []
 
         for row in rows:
@@ -59,12 +67,16 @@ def home():
             shipping40 = towing + ocean40
             shipping45 = towing + ocean45
 
-            if vehicle_price is None:
-                total40 = shipping40
-                total45 = shipping45
-            else:
-                total40 = shipping40 + vehicle_price
-                total45 = shipping45 + vehicle_price
+            total40 = shipping40
+            total45 = shipping45
+
+            if vehicle_price is not None:
+                total40 += vehicle_price
+                total45 += vehicle_price
+
+            if salalah_shihen_fee is not None:
+                total40 += salalah_shihen_fee
+                total45 += salalah_shihen_fee
 
             row["OCEAN40"] = ocean40
             row["OCEAN45"] = ocean45
@@ -73,6 +85,7 @@ def home():
             row["TOTAL40"] = total40
             row["TOTAL45"] = total45
             row["VEHICLE_PRICE"] = vehicle_price
+            row["SALALAH_SHIHEN_FEE"] = salalah_shihen_fee
 
             results.append(row)
 
@@ -81,7 +94,8 @@ def home():
     return render_template(
         "index.html",
         results=results,
-        vehicle_price=vehicle_price
+        vehicle_price=vehicle_price,
+        salalah_shihen_fee=salalah_shihen_fee
     )
 
 
