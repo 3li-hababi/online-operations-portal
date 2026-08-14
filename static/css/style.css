@@ -357,3 +357,76 @@ tr:hover {
 .copy-rates-btn:hover {
     background: #eef6ff;
 }
+
+
+/* ================================
+   WAREHOUSE COLORS
+   ================================ */
+
+.warehouse-label {
+    font-weight: normal;
+}
+
+.warehouse-label strong {
+    font-weight: bold;
+}
+
+.warehouse-dot {
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+/* Georgia */
+.warehouse-ga .warehouse-dot {
+    color: #2e8b57;
+}
+
+.warehouse-ga strong {
+    color: #2e8b57;
+}
+
+/* Texas */
+.warehouse-tx .warehouse-dot {
+    color: #2878c8;
+}
+
+.warehouse-tx strong {
+    color: #2878c8;
+}
+
+/* New Jersey */
+.warehouse-nj .warehouse-dot {
+    color: #e58a00;
+}
+
+.warehouse-nj strong {
+    color: #e58a00;
+}
+
+/* California */
+.warehouse-ca .warehouse-dot {
+    color: #7b4ab8;
+}
+
+.warehouse-ca strong {
+    color: #7b4ab8;
+}
+
+/* Unknown / future warehouses */
+.warehouse-label:not(
+    .warehouse-ga,
+    .warehouse-tx,
+    .warehouse-nj,
+    .warehouse-ca
+) .warehouse-dot {
+    color: #777;
+}
+
+.warehouse-label:not(
+    .warehouse-ga,
+    .warehouse-tx,
+    .warehouse-nj,
+    .warehouse-ca
+) strong {
+    color: #555;
+}

@@ -66,12 +66,15 @@
         </div>
 
         <div class="card-city">
-            {{ row.CITY }}
+            {{ row.CITY }} - {{ row.STATE }}
         </div>
 
         <div class="card-footer">
-            Warehouse:
-            <strong>{{ row.WAREHOUSE }}</strong>
+            <span class="warehouse-label warehouse-{{ row.WAREHOUSE|lower }}">
+                <span class="warehouse-dot">●</span>
+                Warehouse:
+                <strong>{{ row.WAREHOUSE }}</strong>
+            </span>
         </div>
 
         <hr>
@@ -154,7 +157,7 @@
         <button type="button" class="copy-rates-btn">
             📋 Copy Rates</button><textarea class="copy-data" hidden>
 📍 {{ row.BRANCH }}
-{{ row.CITY }}
+{{ row.CITY }} - {{ row.STATE }}
 Warehouse: {{ row.WAREHOUSE }}
 
 🚚 Inland Towing: ${{ "{:,.2f}".format(row["TOWING RATE"]|float) }}
